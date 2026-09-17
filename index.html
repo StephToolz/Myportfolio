@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,9 +82,6 @@
     background:var(--green); transition:width .2s ease;
   }
   nav a:hover::after{ width:100%; }
-  @media (prefers-reduced-motion: reduce){
-    .cursor::after{ animation:none; }
-  }
 </style>
 </head>
 <body class="antialiased">
@@ -94,7 +91,7 @@
 <!-- NAV -->
 <header class="sticky top-0 z-30 backdrop-blur bg-[#0a0e0c]/80 border-b brd">
   <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between text-sm">
-    <span class="text-[color:var(--green)]">root@dev:~$</span>
+    <span class="text-[color:var(--green)]">root@stephtoolz:~$</span>
     <nav class="hidden sm:flex gap-8 text-[color:var(--text-dim)]">
       <a href="#projects" class="hover:text-[color:var(--green)]">projects</a>
       <a href="#stack" class="hover:text-[color:var(--green)]">stack</a>
@@ -105,14 +102,12 @@
 
 <!-- HERO -->
 <section class="max-w-5xl mx-auto px-6 pt-24 pb-28">
-  <p class="text-[color:var(--green-dim)] text-sm mb-4">visitor@yoursite:~$ whoami</p>
+  <p class="text-[color:var(--green-dim)] text-sm mb-4">visitor@stephtoolz:~$ whoami</p>
   <h1 class="text-4xl sm:text-6xl font-bold leading-tight glow">
     <span id="typed"></span><span class="cursor"></span>
   </h1>
   <p class="mt-6 max-w-xl text-[color:var(--text-dim)] leading-relaxed">
-    Stavím krypto boty, automatizace a nástroje, které běží samy — bez dozoru,
-    bez výmluv. Serverless architektury, API integrace, čistý kód.
-    Pracuju odkudkoliv — momentálně ze Španělska.
+    Building automated crypto tools, serverless architectures, and background infrastructure. High efficiency, zero fluff. Based in Spain.
   </p>
   <div class="mt-8 flex flex-wrap gap-3">
     <a href="#projects" class="btn-primary px-5 py-2.5 text-sm font-semibold">./view-projects</a>
@@ -124,29 +119,52 @@
 <section id="projects" class="max-w-5xl mx-auto px-6 py-16 border-t brd">
   <p class="text-[color:var(--green-dim)] text-sm mb-8">~/projects $ ls -la</p>
 
-  <div class="card p-6 sm:p-8">
-    <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
-      <div>
-        <h3 class="text-xl font-semibold text-[color:var(--green)]">telegram-crypto-bot</h3>
-        <p class="text-[color:var(--text-dim)] text-sm mt-1">all-in-one · serverless</p>
+  <div class="grid gap-6">
+    <!-- Project 1 -->
+    <div class="card p-6 sm:p-8">
+      <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+        <div>
+          <h3 class="text-xl font-semibold text-[color:var(--green)]">All-in-One Crypto Bot</h3>
+          <p class="text-[color:var(--text-dim)] text-sm mt-1">telegram · serverless · automation</p>
+        </div>
+        <span class="tag text-xs px-2 py-1 rounded">active</span>
       </div>
-      <span class="tag text-xs px-2 py-1 rounded">online</span>
+      <p class="text-[color:var(--text)] leading-relaxed mb-6">
+        An advanced Telegram tool tracking prices, market sentiment (Fear & Greed), dominance, and delivering formatted dashboard reports via GitHub Actions & Cloudflare Workers.
+      </p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="tag text-xs px-2 py-1 rounded">Python</span>
+        <span class="tag text-xs px-2 py-1 rounded">Cloudflare</span>
+        <span class="tag text-xs px-2 py-1 rounded">APIs</span>
+      </div>
+      <!-- Zde si můžeš upravit odkaz na svůj GitHub projekt -->
+      <a href="https://github.com/stephtoolz" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 text-sm text-[color:var(--green)] hover:underline">
+        view repository &rarr;
+      </a>
     </div>
-    <p class="text-[color:var(--text)] leading-relaxed mb-6">
-      All-in-one Telegram bot pro krypto trh — sleduje ceny, posílá alerty
-      a spouští automatizované akce přes napojená API. Celý běh je serverless,
-      žádné vlastní servery, žádný downtime k řešení.
-    </p>
-    <div class="flex flex-wrap gap-2 mb-6">
-      <span class="tag text-xs px-2 py-1 rounded">Python</span>
-      <span class="tag text-xs px-2 py-1 rounded">Telegram API</span>
-      <span class="tag text-xs px-2 py-1 rounded">Serverless</span>
-      <span class="tag text-xs px-2 py-1 rounded">Cloudflare Workers</span>
+
+    <!-- Project 2 (Můžeš upravit nebo přidat další) -->
+    <div class="card p-6 sm:p-8">
+      <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
+        <div>
+          <h3 class="text-xl font-semibold text-[color:var(--green)]">Next Project / Script</h3>
+          <p class="text-[color:var(--text-dim)] text-sm mt-1">automation · tooling</p>
+        </div>
+        <span class="tag text-xs px-2 py-1 rounded">coming soon</span>
+      </div>
+      <p class="text-[color:var(--text)] leading-relaxed mb-6">
+        Placeholder for your upcoming automation tool or web utility. Easy to plug in with custom links and documentation.
+      </p>
+      <div class="flex flex-wrap gap-2 mb-6">
+        <span class="tag text-xs px-2 py-1 rounded">JavaScript</span>
+        <span class="tag text-xs px-2 py-1 rounded">Webhooks</span>
+      </div>
+      <a href="https://github.com/stephtoolz" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 text-sm text-[color:var(--green)] hover:underline">
+        view repository &rarr;
+      </a>
     </div>
-    <a href="https://github.com/" target="_blank" rel="noopener"
-       class="inline-flex items-center gap-2 text-sm text-[color:var(--green)] hover:underline">
-      github.com/tvuj-ucet/telegram-crypto-bot
-    </a>
   </div>
 </section>
 
@@ -154,21 +172,11 @@
 <section id="stack" class="max-w-5xl mx-auto px-6 py-16 border-t brd">
   <p class="text-[color:var(--green-dim)] text-sm mb-8">~/stack $ cat skills.txt</p>
   <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-    <div class="card p-5 text-center">
-      <p class="font-semibold text-[color:var(--green)]">Python</p>
-    </div>
-    <div class="card p-5 text-center">
-      <p class="font-semibold text-[color:var(--green)]">JavaScript</p>
-    </div>
-    <div class="card p-5 text-center">
-      <p class="font-semibold text-[color:var(--green)]">Git</p>
-    </div>
-    <div class="card p-5 text-center">
-      <p class="font-semibold text-[color:var(--green)]">APIs</p>
-    </div>
-    <div class="card p-5 text-center">
-      <p class="font-semibold text-[color:var(--green)]">Cloudflare</p>
-    </div>
+    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">Python</p></div>
+    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">JavaScript</p></div>
+    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">Git & Actions</p></div>
+    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">REST APIs</p></div>
+    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">Cloudflare</p></div>
   </div>
 </section>
 
@@ -176,29 +184,32 @@
 <section id="contact" class="max-w-5xl mx-auto px-6 py-16 border-t brd">
   <p class="text-[color:var(--green-dim)] text-sm mb-8">~/contact $ ./open-channels.sh</p>
   <div class="grid sm:grid-cols-3 gap-4">
-    <a href="https://github.com/" target="_blank" rel="noopener" class="card p-6 group">
+    <!-- GitHub -->
+    <a href="https://github.com/stephtoolz" target="_blank" rel="noopener" class="card p-6 group">
       <p class="text-[color:var(--text-dim)] text-xs mb-1">github</p>
-      <p class="font-semibold group-hover:text-[color:var(--green)]">/tvuj-ucet</p>
+      <p class="font-semibold group-hover:text-[color:var(--green)]">@stephtoolz</p>
     </a>
-    <a href="https://t.me/" target="_blank" rel="noopener" class="card p-6 group">
+    <!-- Telegram -->
+    <a href="https://t.me/stephtoolz" target="_blank" rel="noopener" class="card p-6 group">
       <p class="text-[color:var(--text-dim)] text-xs mb-1">telegram</p>
-      <p class="font-semibold group-hover:text-[color:var(--green)]">@tvuj_handle</p>
+      <p class="font-semibold group-hover:text-[color:var(--green)]">@stephtoolz</p>
     </a>
-    <a href="https://x.com/" target="_blank" rel="noopener" class="card p-6 group">
-      <p class="text-[color:var(--text-dim)] text-xs mb-1">x / twitter</p>
-      <p class="font-semibold group-hover:text-[color:var(--green)]">@tvuj_handle</p>
+    <!-- Discord -->
+    <a href="https://discord.com" target="_blank" rel="noopener" class="card p-6 group">
+      <p class="text-[color:var(--text-dim)] text-xs mb-1">discord</p>
+      <p class="font-semibold group-hover:text-[color:var(--green)]">stephtoolz</p>
     </a>
   </div>
 </section>
 
 <footer class="max-w-5xl mx-auto px-6 py-10 border-t brd text-xs text-[color:var(--text-dim)]">
-  © <span id="year"></span> — proces ukončen s kódem 0
+  © <span id="year"></span> stephtoolz — execution successful [code 0]
 </footer>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  const phrases = ["Ahoj, jsem [Tvoje jméno]", "Buduju krypto boty", "Automatizuju vše, co jde"];
+  const phrases = ["Building crypto bots.", "Automating everything.", "Scripting the future."];
   const el = document.getElementById('typed');
   let pi = 0, ci = 0, deleting = false;
 
