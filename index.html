@@ -1,348 +1,636 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>~/portfolio — dev@terminal</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>_</text></svg>">
-<script src="https://cdn.tailwindcss.com"></script>
+<title>Steph.kesug</title>
+<meta name="description" content="Personal portfolio and blogging website.">
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg:      '#0d1117',
+          surface: '#11161d',
+          panel:   '#161b22',
+          line:    '#26303c',
+          line2:   '#30363d',
+          ink:     '#c9d1d9',
+          mute:    '#7d8b9a',
+          green:   '#5fe38a',
+          green2:  '#2ea765',
+          amber:   '#e3b25f',
+        },
+        fontFamily: {
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+
 <style>
-  :root{
-    --bg: #0a0e0c;
-    --bg-panel: #0f1512;
-    --line: #1c2620;
-    --green: #39ff8f;
-    --green-dim: #1f9a5c;
-    --text: #c9d6cf;
-    --text-dim: #5c6b63;
+  :root { color-scheme: dark; }
+  html, body { background:#0d1117; }
+  body {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    color: #c9d1d9;
+    position: relative;
   }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'JetBrains Mono', ui-monospace, monospace;
-    background-image:
-      linear-gradient(rgba(57,255,143,0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(57,255,143,0.035) 1px, transparent 1px);
-    background-size: 42px 42px;
-  }
-  ::selection{ background:var(--green); color:#04120a; }
-  .brd{ border-color:var(--line); }
-  .glow{ text-shadow: 0 0 18px rgba(57,255,143,0.35); }
-  .cursor::after{
-    content:'';
-    display:inline-block;
-    width:.55ch;
-    height:1em;
-    background:var(--green);
-    margin-left:4px;
-    vertical-align:-2px;
-    animation:blink 1s steps(1) infinite;
-  }
-  @keyframes blink{ 50%{ opacity:0; } }
-  .scan{
-    position:fixed; inset:0; pointer-events:none; z-index:40;
-    background:repeating-linear-gradient(
+
+  ::selection { background: #5fe38a; color: #0d1117; }
+
+  /* thin custom scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #0d1117; }
+  ::-webkit-scrollbar-thumb { background: #26303c; border-radius: 6px; }
+  ::-webkit-scrollbar-thumb:hover { background: #30363d; }
+
+  /* CRT / scanline overlay */
+  .crt-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    background: repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,0.015) 0px,
-      rgba(255,255,255,0.015) 1px,
-      transparent 1px,
-      transparent 3px
+      rgba(255,255,255,0.028) 0px,
+      rgba(255,255,255,0.028) 1px,
+      rgba(0,0,0,0) 1px,
+      rgba(0,0,0,0) 3px
     );
-    mix-blend-mode:overlay;
+    mix-blend-mode: overlay;
+    opacity: 0.55;
+    animation: crtFlicker 6s infinite steps(60);
   }
-  .card{
-    background:var(--bg-panel);
-    border:1px solid var(--line);
-    transition: border-color .25s ease, transform .25s ease;
+  .crt-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 59;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%);
   }
-  .card:hover{
-    border-color:var(--green-dim);
+  @keyframes crtFlicker {
+    0%, 96%, 100% { opacity: 0.5; }
+    97% { opacity: 0.62; }
+    98% { opacity: 0.42; }
   }
-  .tag{
-    border:1px solid var(--line);
-    color:var(--text-dim);
+  @media (prefers-reduced-motion: reduce) {
+    .crt-overlay { animation: none; }
   }
-  .btn-primary{
-    background:var(--green);
-    color:#04120a;
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(95,227,138,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(95,227,138,0.05) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 90%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 90%);
   }
-  .btn-primary:hover{ filter:brightness(1.08); }
-  .btn-ghost{
-    border:1px solid var(--line);
-    color:var(--text);
+
+  .caret {
+    display: inline-block;
+    width: 0.55ch;
+    background: #5fe38a;
+    margin-left: 2px;
+    animation: blink 1.05s steps(1) infinite;
   }
-  .btn-ghost:hover{ border-color:var(--green-dim); color:var(--green); }
-  nav a{ position:relative; }
-  nav a::after{
-    content:''; position:absolute; left:0; bottom:-3px; width:0; height:1px;
-    background:var(--green); transition:width .2s ease;
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .corner-frame { position: relative; }
+  .corner-frame::before,
+  .corner-frame::after,
+  .corner-frame > .cf-tr,
+  .corner-frame > .cf-bl {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: #5fe38a;
+    z-index: 10;
   }
-  nav a:hover::after{ width:100%; }
+  .corner-frame::before { top: -9px; left: -9px; border-top: 2px solid; border-left: 2px solid; }
+  .corner-frame::after { bottom: -9px; right: -9px; border-bottom: 2px solid; border-right: 2px solid; }
+  .corner-frame .cf-tr { top: -9px; right: -9px; border-top: 2px solid #5fe38a; border-right: 2px solid #5fe38a; }
+  .corner-frame .cf-bl { bottom: -9px; left: -9px; border-bottom: 2px solid #5fe38a; border-left: 2px solid #5fe38a; }
+
+  .prompt::before { content: "$ "; color: #5fe38a; }
+  .out::before { content: "> "; color: #48566a; }
+
+  .btn-term {
+    font-family: 'JetBrains Mono', monospace;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #30363d;
+    background: #161b22;
+    color: #c9d1d9;
+    padding: 0.55rem 1rem;
+    font-size: 0.82rem;
+    transition: border-color .15s ease, color .15s ease, background-color .15s ease;
+  }
+  .btn-term:hover { border-color: #5fe38a; color: #5fe38a; background: #151d18; }
+  .btn-term-solid {
+    font-family: 'JetBrains Mono', monospace;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #5fe38a;
+    background: #5fe38a;
+    color: #0b1210;
+    padding: 0.6rem 1.15rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background-color .15s ease, transform .1s ease;
+  }
+  .btn-term-solid:hover { background: #7cedaa; }
+  .btn-term-solid:active { transform: translateY(1px); }
+
+  .card { background: #11161d; border: 1px solid #21272f; }
+  .card:hover { border-color: #2ea765; }
+
+  .nav-link { position: relative; color: #8b96a3; font-size: 0.85rem; }
+  .nav-link:hover { color: #c9d1d9; }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 1px;
+    background: #5fe38a;
+    transition: width .18s ease;
+  }
+  .nav-link:hover::after { width: 100%; }
+
+  .star { color: #e3b25f; }
+  .star-off { color: #30363d; }
+
+  dialog::backdrop { background: rgba(3,6,10,0.75); backdrop-filter: blur(2px); }
+  dialog#tosModal, dialog#privacyModal {
+    background: #11161d;
+    color: #c9d1d9;
+    border: 1px solid #26303c;
+    max-width: 640px;
+    width: 92vw;
+    padding: 0;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%) translateY(12px);
+    background: #161b22;
+    border: 1px solid #5fe38a;
+    color: #5fe38a;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    padding: 0.6rem 1.1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  code, .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 </style>
 </head>
-<body class="antialiased">
 
-<div class="scan"></div>
+<body class="bg-bg text-ink antialiased">
+<div class="crt-overlay"></div>
+<div class="crt-vignette"></div>
 
-<!-- NAV -->
-<header class="sticky top-0 z-30 backdrop-blur bg-[#0a0e0c]/80 border-b brd">
-  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between text-sm">
-    <span class="text-[color:var(--green)]">root@stephtoolz:~$</span>
-    <nav class="hidden sm:flex gap-8 text-[color:var(--text-dim)]">
-      <a href="#projects" class="hover:text-[color:var(--green)]">projects</a>
-      <a href="#stack" class="hover:text-[color:var(--green)]">stack</a>
-      <a href="#contact" class="hover:text-[color:var(--green)]">contact</a>
+<!-- ================= NAVBAR ================= -->
+<header class="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#top" class="mono text-sm sm:text-base font-semibold tracking-tight text-ink">
+      <span class="text-green">~/</span>alex<span class="text-mute">.dev</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 mono">
+      <a href="#about" class="nav-link">[About me]</a>
+      <a href="#projects" class="nav-link">[My projects]</a>
+      <a href="#reviews" class="nav-link">[Leave a review]</a>
+      <a href="#referrals" class="nav-link">[Collabs]</a>
+      <button type="button" data-open-modal="tosModal" class="nav-link">[TOS]</button>
     </nav>
+    <a href="#contact" class="btn-term-solid mono text-xs sm:text-sm">
+      contact --now
+    </a>
   </div>
 </header>
 
-<!-- HERO -->
-<section class="max-w-5xl mx-auto px-6 pt-24 pb-28">
-  <p class="text-[color:var(--green-dim)] text-sm mb-4">visitor@stephtoolz:~$ whoami</p>
-  <h1 class="text-4xl sm:text-6xl font-bold leading-tight glow">
-    <span id="typed"></span><span class="cursor"></span>
-  </h1>
-  <p class="mt-6 max-w-xl text-[color:var(--text-dim)] leading-relaxed">
-    I am a small creator from Spain , that makes awesome stuff.
-  </p>
-  <div class="mt-8 flex flex-wrap gap-3">
-    <a href="#projects" class="btn-primary px-5 py-2.5 text-sm font-semibold">./view-projects</a>
-    <a href="#contact" class="btn-ghost px-5 py-2.5 text-sm">./contact.sh</a>
-  </div>
-</section>
+<main id="top">
 
-<!-- PROJECTS -->
-<section id="projects" class="max-w-5xl mx-auto px-6 py-16 border-t brd">
-  <p class="text-[color:var(--green-dim)] text-sm mb-8">~/projects $ ls -la</p>
+  <!-- ================= HERO ================= -->
+  <section class="relative overflow-hidden grid-bg">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-20 grid lg:grid-cols-[1.15fr_0.85fr] gap-14 items-center">
 
-  <!-- Sem JavaScript automaticky vygeneruje všechny karty -->
-  <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Generováno dynamicky skriptem níže -->
-  </div>
-</section>
-
-<script>
-  // Seznam tvých projektů (tady můžeš mít všech 23 + coming soon + skrytý)
-  const projectsData = [
-    {
-      title: "Zippone",
-      desc: "A simple password guessing tool (using dictionary methods) - works for .rar & .zip files",
-      tags: ["Batchfile", "html"],
-      link: "https://github.com/stephtoolz",
-      status: "Active"
-    },
-    {
-      title: "All-in-One Crypto Bot",
-      desc: "Advanced Telegram tool tracking prices, market sentiment, and delivering automated dashboard reports.",
-      tags: ["Python", "Cloudflare", "GitHub Actions"],
-      link: "https://github.com/stephtoolz",
-      status: "Active"
-    },
-    // Tady můžeš jednoduše zkopírovat a přidat zbývající projekty (3 až 23)...
-    {
-      title: "UserPassLog",
-      desc: "Tool that logs user's administrator password into .txt file",
-      tags: ["Python", "Powershell"],
-      link: "https://github.com/stephtoolz/userpassloger",
-      status: "Active"
-    },
-    // --- COMING SOON PROJEKT ---
-    {
-      title: "Comming soon",
-      desc: "Currently in development.",
-      tags: ["C#", "C++"],
-      link: "#",
-      status: "Soon"
-    },
-    // --- NEVIDITELNÝ PROJEKT (skrytý pomocí skrytého stavu / hidden) ---
-    {
-      title: "Secret Draft",
-      desc: "This is a hidden template project.",
-      tags: ["Draft"],
-      link: "#",
-      status: "Hidden",
-      hidden: true 
-    }
-  ];
-
-  const gridEl = document.getElementById('project-grid');
-
-  projectsData.forEach(p => {
-    // Pokud je projekt označený jako hidden, na webu se vůbec nevykreslí
-    if (p.hidden) return;
-
-    const card = document.createElement('div');
-    card.className = "card p-6 sm:p-8 flex flex-col justify-between";
-    
-    card.innerHTML = `
       <div>
-        <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
-          <div>
-            <h3 class="text-xl font-semibold text-[color:var(--green)]">${p.title}</h3>
-            <p class="text-[color:var(--text-dim)] text-sm mt-1">${p.tags.join(' · ')}</p>
-          </div>
-          <span class="tag text-xs px-2 py-1 rounded h-fit">${p.status}</span>
+        <p class="mono text-xs text-green2 mb-4">visitor@Stephkesug:~$ whoami</p>
+        <h1 class="mono font-extrabold leading-[1.06] text-4xl sm:text-5xl lg:text-[3.4rem] text-ink">
+          StephToolz
+        </h1>
+        <p class="mono text-xl sm:text-2xl mt-3 text-green">
+          Developer. Creator. Problem Solver.<span class="caret">&nbsp;</span>
+        </p>
+        <p class="text-mute mt-6 max-w-md leading-relaxed">
+          I build tools that people actually use.
+        </p>
+
+        <div class="flex flex-wrap gap-3 mt-8">
+          <a href="#contact" class="btn-term-solid">
+            <span class="mono">$ contact --now</span>
+          </a>
+          <a href="#projects" class="btn-term">
+            <span class="mono">$ ls ./projects</span>
+          </a>
         </div>
-        <p class="text-[color:var(--text)] text-sm leading-relaxed mb-6">
-          ${p.desc}
+
+        <div class="flex items-center gap-5 mt-10 text-mute">
+          <span class="mono text-xs">status:</span>
+          <span class="inline-flex items-center gap-2 text-xs mono text-green">
+            <span class="w-1.5 h-1.5 rounded-full bg-green inline-block"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="corner-frame justify-self-center">
+        <span class="cf-tr"></span><span class="cf-bl"></span>
+        <div class="w-full max-w-sm border border-line2 bg-panel">
+          <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-line2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+            <span class="mono text-[11px] text-mute ml-3">profile.png</span>
+          </div>
+          <img
+            src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=600&h=600&fit=crop&q=80"
+            alt="Portrait photo"
+            class="w-full aspect-square object-cover grayscale contrast-125"
+            onerror="this.src='https://placehold.co/600x600/11161d/5fe38a?text=alex.dev'"
+          >
+          <div class="px-4 py-3 mono text-[11px] text-mute border-t border-line2">
+            1920×1920 · full-stack developer
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="about" class="border-t border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 grid md:grid-cols-2 gap-12 items-start">
+
+      <div>
+        <p class="mono text-xs text-green2 mb-3">01 / about</p>
+        <h2 class="mono text-2xl sm:text-3xl font-bold text-ink mb-5">About me</h2>
+        <p class="text-mute leading-relaxed mb-4">
+          I'm a full-stack developer based in Central Europe, working mostly
+          with React and Node on the front, and whatever the infrastructure
+          demands on the back. I care about code that's easy to delete, not
+          just easy to write.
+        </p>
+        <p class="text-mute leading-relaxed">
+          Outside of client work I maintain a couple of open-source tools,
+          write about performance and DX, and occasionally break my own
+          homelab on purpose to see what happens.
         </p>
       </div>
-      <div>
-        <div class="flex flex-wrap gap-2 mb-6">
-          ${p.tags.map(t => `<span class="tag text-xs px-2 py-1 rounded">${t}</span>`).join('')}
+
+      <div class="border border-line2 bg-panel">
+        <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-line2">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f]"></span>
+          <span class="mono text-[11px] text-mute ml-3">stack.sh</span>
         </div>
-        <a href="${p.link}" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 text-sm text-[color:var(--green)] hover:underline">
-          view repository &rarr;
-        </a>
-      </div>
-    `;
-    gridEl.appendChild(card);
-  });
-</script>
-    
-    <!-- Project 1 -->
-    <div class="card p-6 sm:p-8">
-      <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
-        <div>
-          <h3 class="text-xl font-semibold text-[color:var(--green)]">Dark_bot</h3>
-          <p class="text-[color:var(--text-dim)] text-sm mt-1">telegram · Crypto · automation</p>
+        <div class="p-5 mono text-[13px] leading-7 overflow-x-auto">
+          <p class="prompt text-ink">git init --about</p>
+          <p class="out text-mute">Initialized developer profile</p>
+          <p class="mt-3"><span class="text-green2">languages</span><span class="text-mute">:</span> <span class="text-amber">["TypeScript", "Python", "Go"]</span></p>
+          <p><span class="text-green2">frontend</span><span class="text-mute">:</span>  <span class="text-amber">["React", "Next.js", "TailwindCSS"]</span></p>
+          <p><span class="text-green2">backend</span><span class="text-mute">:</span>   <span class="text-amber">["Node.js", "PostgreSQL", "Redis"]</span></p>
+          <p><span class="text-green2">tools</span><span class="text-mute">:</span>     <span class="text-amber">["Git", "Docker", "Linux", "Vim"]</span></p>
+          <p class="mt-3 prompt text-ink">_<span class="caret">&nbsp;</span></p>
         </div>
-        <span class="tag text-xs px-2 py-1 rounded">active</span>
       </div>
-      <p class="text-[color:var(--text)] leading-relaxed mb-6">
-        An advanced Telegram tool tracking prices, market sentiment (Fear & Greed), dominance, and delivering formatted dashboard reports via GitHub Actions & Cloudflare Workers.
+
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS ================= -->
+  <section id="projects" class="border-t border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20">
+      <p class="mono text-xs text-green2 mb-3">02 / projects</p>
+      <h2 class="mono text-2xl sm:text-3xl font-bold text-ink mb-10">Selected work</h2>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <article class="card group">
+          <div class="aspect-video bg-[radial-gradient(circle_at_20%_20%,#152018,transparent_60%)] border-b border-line2 flex items-center justify-center">
+            <span class="mono text-xs text-line2 group-hover:text-green2 transition-colors">01</span>
+          </div>
+          <div class="p-5">
+            <h3 class="mono font-semibold text-ink">Pulse Analytics</h3>
+            <p class="text-mute text-sm mt-2 leading-relaxed">Real-time dashboard for tracking product metrics, built for teams that hate waiting on cron jobs.</p>
+            <div class="flex gap-2 mt-4 flex-wrap">
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">React</span>
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">Node.js</span>
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">WebSockets</span>
+            </div>
+            <div class="flex gap-2 mt-5">
+              <a href="#" class="btn-term-solid text-xs flex-1 justify-center">Live Demo</a>
+              <a href="#" class="btn-term text-xs flex-1 justify-center">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card group">
+          <div class="aspect-video bg-[radial-gradient(circle_at_80%_30%,#152018,transparent_60%)] border-b border-line2 flex items-center justify-center">
+            <span class="mono text-xs text-line2 group-hover:text-green2 transition-colors">02</span>
+          </div>
+          <div class="p-5">
+            <h3 class="mono font-semibold text-ink">Ledgerline</h3>
+            <p class="text-mute text-sm mt-2 leading-relaxed">Self-hosted invoicing tool for freelancers, with automatic recurring billing and PDF export.</p>
+            <div class="flex gap-2 mt-4 flex-wrap">
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">Next.js</span>
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">PostgreSQL</span>
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">Stripe</span>
+            </div>
+            <div class="flex gap-2 mt-5">
+              <a href="#" class="btn-term-solid text-xs flex-1 justify-center">Live Demo</a>
+              <a href="#" class="btn-term text-xs flex-1 justify-center">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="card group">
+          <div class="aspect-video bg-[radial-gradient(circle_at_50%_80%,#152018,transparent_60%)] border-b border-line2 flex items-center justify-center">
+            <span class="mono text-xs text-line2 group-hover:text-green2 transition-colors">03</span>
+          </div>
+          <div class="p-5">
+            <h3 class="mono font-semibold text-ink">tinycrontab</h3>
+            <p class="text-mute text-sm mt-2 leading-relaxed">A 4KB dependency-free cron parser for the browser and Node, with human-readable output.</p>
+            <div class="flex gap-2 mt-4 flex-wrap">
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">TypeScript</span>
+              <span class="mono text-[11px] px-2 py-1 border border-line2 text-mute">Open Source</span>
+            </div>
+            <div class="flex gap-2 mt-5">
+              <a href="#" class="btn-term-solid text-xs flex-1 justify-center">Live Demo</a>
+              <a href="#" class="btn-term text-xs flex-1 justify-center">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REVIEWS ================= -->
+  <section id="reviews" class="border-t border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20">
+      <p class="mono text-xs text-green2 mb-3">03 / reviews</p>
+      <h2 class="mono text-2xl sm:text-3xl font-bold text-ink mb-10">What people say</h2>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <figure class="card p-5">
+          <div class="mono text-sm mb-3" aria-label="5 out of 5 stars">
+            <span class="star">★★★★★</span>
+          </div>
+          <blockquote class="text-sm text-ink/90 leading-relaxed">
+            "Alex shipped in three weeks what our previous contractor couldn't
+            finish in three months. Communication was clear the entire time."
+          </blockquote>
+          <figcaption class="mono text-xs text-mute mt-4">
+            — Michaela Svoboda, <span class="text-mute/80">CTO at Ferveo</span>
+          </figcaption>
+        </figure>
+
+        <figure class="card p-5">
+          <div class="mono text-sm mb-3" aria-label="5 out of 5 stars">
+            <span class="star">★★★★★</span>
+          </div>
+          <blockquote class="text-sm text-ink/90 leading-relaxed">
+            "Rare combination of strong technical judgement and genuine care
+            about the product. I'd hire him again without a second thought."
+          </blockquote>
+          <figcaption class="mono text-xs text-mute mt-4">
+            — Tomáš Král, <span class="text-mute/80">Founder, Ledgerline</span>
+          </figcaption>
+        </figure>
+
+        <figure class="card p-5">
+          <div class="mono text-sm mb-3" aria-label="4 out of 5 stars">
+            <span class="star">★★★★</span><span class="star-off">★</span>
+          </div>
+          <blockquote class="text-sm text-ink/90 leading-relaxed">
+            "Solid engineer, sharp on architecture decisions early on which
+            saved us a rewrite later. Documentation could've been longer."
+          </blockquote>
+          <figcaption class="mono text-xs text-mute mt-4">
+            — Jana Dvořák, <span class="text-mute/80">Product Lead, Pulse</span>
+          </figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REFERRALS ================= -->
+  <section id="referrals" class="border-t border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20">
+      <p class="mono text-xs text-green2 mb-3">04 / referrals</p>
+      <h2 class="mono text-2xl sm:text-3xl font-bold text-ink mb-3">Tools I actually use</h2>
+      <p class="text-mute text-sm mb-10 max-w-lg">
+        Referral links and discount codes for the services running behind
+        most of the projects above. Using them costs you nothing extra.
       </p>
-      <div class="flex flex-wrap gap-2 mb-6">
-        <span class="tag text-xs px-2 py-1 rounded">Python</span>
-        <span class="tag text-xs px-2 py-1 rounded">Cloudflare</span>
-        <span class="tag text-xs px-2 py-1 rounded">APIs</span>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <div class="card p-5">
+          <h3 class="mono font-semibold text-ink">Vercel</h3>
+          <p class="text-mute text-xs mt-1.5 mb-4">Hosting & deployment for frontend projects.</p>
+          <div class="flex items-center justify-between border border-line2 bg-bg px-3 py-2">
+            <code class="mono text-xs text-green2" id="code-vercel">ALEX-VERCEL10</code>
+            <button type="button" class="copy-btn mono text-[11px] text-mute hover:text-green transition-colors" data-copy-target="code-vercel">Copy</button>
+          </div>
+        </div>
+
+        <div class="card p-5">
+          <h3 class="mono font-semibold text-ink">Hetzner</h3>
+          <p class="text-mute text-xs mt-1.5 mb-4">Cheap, reliable VPS for anything self-hosted.</p>
+          <div class="flex items-center justify-between border border-line2 bg-bg px-3 py-2">
+            <code class="mono text-xs text-green2" id="code-hetzner">ALEX-CLOUD20</code>
+            <button type="button" class="copy-btn mono text-[11px] text-mute hover:text-green transition-colors" data-copy-target="code-hetzner">Copy</button>
+          </div>
+        </div>
+
+        <div class="card p-5">
+          <h3 class="mono font-semibold text-ink">Linear</h3>
+          <p class="text-mute text-xs mt-1.5 mb-4">Issue tracking that doesn't get in the way.</p>
+          <div class="flex items-center justify-between border border-line2 bg-bg px-3 py-2">
+            <code class="mono text-xs text-green2" id="code-linear">linear.app/r/alex</code>
+            <button type="button" class="copy-btn mono text-[11px] text-mute hover:text-green transition-colors" data-copy-target="code-linear">Copy</button>
+          </div>
+        </div>
+
       </div>
-      <!-- Zde si můžeš upravit odkaz na svůj GitHub projekt -->
-      <a href="https://t.me/steph_s_bot" target="_blank" rel="noopener"
-         class="inline-flex items-center gap-2 text-sm text-[color:var(--green)] hover:underline">
-        view repository &rarr;
+    </div>
+  </section>
+
+  <!-- ================= CONTACT / CTA ================= -->
+  <section id="contact" class="border-t border-line">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 text-center">
+      <p class="mono text-xs text-green2 mb-3">05 / contact</p>
+      <h2 class="mono text-2xl sm:text-3xl font-bold text-ink mb-4">Got something to build?</h2>
+      <p class="text-mute max-w-md mx-auto mb-8">
+        Open to freelance projects and full-time roles. Fastest way to
+        reach me is email — I read it before coffee.
+      </p>
+      <a href="mailto:hello@alex.dev" class="btn-term-solid inline-flex">
+        <span class="mono">$ mail hello@alex.dev</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="border-t border-line">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+
+    <p class="mono text-xs text-mute">© 2026 Alex Novák. All rights reserved.</p>
+
+    <div class="flex items-center gap-5">
+      <a href="#" aria-label="GitHub" class="text-mute hover:text-green transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.93c.58.1.79-.25.79-.56v-2.16c-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.5 3.17-1.18 3.17-1.18.64 1.6.24 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.7 5.4-5.27 5.69.42.36.78 1.07.78 2.16v3.2c0 .32.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+      </a>
+      <a href="#" aria-label="LinkedIn" class="text-mute hover:text-green transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.44-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
+      </a>
+      <a href="#" aria-label="X (Twitter)" class="text-mute hover:text-green transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.24 3H21l-6.5 7.43L22.2 21h-6.2l-4.86-6.35L5.5 21H2.7l6.95-7.94L1.8 3h6.35l4.4 5.82L18.24 3Zm-1.08 16.17h1.7L7.9 4.74H6.08l11.08 14.43Z"/></svg>
+      </a>
+      <a href="mailto:hello@alex.dev" aria-label="Email" class="text-mute hover:text-green transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 6h18v12H3z"/><path d="m3 6 9 7 9-7"/></svg>
       </a>
     </div>
 
-    <!-- Project 2 (Můžeš upravit nebo přidat další) -->
-    <div class="card p-6 sm:p-8">
-      <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
-        <div>
-          <h3 class="text-xl font-semibold text-[color:var(--green)]">Zippone</h3>
-          <p class="text-[color:var(--text-dim)] text-sm mt-1">Password Guessing script</p>
-        </div>
-        <span class="tag text-xs px-2 py-1 rounded">Active</span>
-      </div>
-      <p class="text-[color:var(--text)] leading-relaxed mb-6">
-        A simple password guesing tool ( using dictionary methods) - works for .rar & .zip files
-      </p>
-      <div class="flex flex-wrap gap-2 mb-6">
-        <span class="tag text-xs px-2 py-1 rounded">Batchfile</span>
-        <span class="tag text-xs px-2 py-1 rounded">html</span>
-      </div>
-      <a href="https://github.com/stephtoolz/zippone" target="_blank" rel="noopener"
-         class="inline-flex items-center gap-2 text-sm text-[color:var(--green)] hover:underline">
-        view repository &rarr;
-      </a>
+    <div class="flex items-center gap-5 mono text-xs">
+      <button type="button" data-open-modal="tosModal" class="text-mute hover:text-green transition-colors">Terms of Service</button>
+      <button type="button" data-open-modal="privacyModal" class="text-mute hover:text-green transition-colors">Privacy Policy</button>
     </div>
-  </div>
-</section>
 
-   <!-- Project 3  -->
-  <div class="card p-6 sm:p-8">
-      <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
-        <div>
-          <h3 class="text-xl font-semibold text-[color:var(--green)]"> See more projects </h3>
-          <p class="text-[color:var(--text-dim)] text-sm mt-1"> you will be redirected to my Github </p>
-        </div>
-        <span class="tag text-xs px-2 py-1 rounded">Active</span>
-      </div>
-      <p class="text-[color:var(--text)] leading-relaxed mb-6">
-       
-      </p>
-      <div class="flex flex-wrap gap-2 mb-6">
-        <span class="tag text-xs px-2 py-1 rounded">Github</span>
-        <span class="tag text-xs px-2 py-1 rounded">Repository</span>
-      </div>
-      <a href="https://github.com/stephtoolz" target="_blank" rel="noopener"
-         class="inline-flex items-center gap-2 text-sm text-[color:var(--green)] hover:underline">
-        Open &rarr;
-      </a>
-    </div>
   </div>
-</section>
-  
-<!-- STACK -->
-<section id="stack" class="max-w-5xl mx-auto px-6 py-16 border-t brd">
-  <p class="text-[color:var(--green-dim)] text-sm mb-8">~/stack $ cat skills.txt</p>
-  <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">Python</p></div>
-    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">JavaScript</p></div>
-    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">LuaU</p></div>
-    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">C#</p></div>
-    <div class="card p-5 text-center"><p class="font-semibold text-[color:var(--green)]">JS</p></div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="max-w-5xl mx-auto px-6 py-16 border-t brd">
-  <p class="text-[color:var(--green-dim)] text-sm mb-8">~/contact $ ./open-channels.sh</p>
-  <div class="grid sm:grid-cols-3 gap-4">
-    <!-- GitHub -->
-    <a href="https://github.com/stephtoolz" target="_blank" rel="noopener" class="card p-6 group">
-      <p class="text-[color:var(--text-dim)] text-xs mb-1">github</p>
-      <p class="font-semibold group-hover:text-[color:var(--green)]">@stephtoolz</p>
-    </a>
-    <!-- Telegram -->
-    <a href="https://t.me/StephSellz" target="_blank" rel="noopener" class="card p-6 group">
-      <p class="text-[color:var(--text-dim)] text-xs mb-1">telegram</p>
-      <p class="font-semibold group-hover:text-[color:var(--green)]">@StephSellz</p>
-    </a>
-    <!-- Discord -->
-    <a href="https://discord.com" target="_blank" rel="noopener" class="card p-6 group">
-      <p class="text-[color:var(--text-dim)] text-xs mb-1">discord</p>
-      <p class="font-semibold group-hover:text-[color:var(--green)]">@shipd</p>
-    </a>
-  </div>
-</section>
-
-<footer class="max-w-5xl mx-auto px-6 py-10 border-t brd text-xs text-[color:var(--text-dim)]">
-  © <span id="year"></span> stephtoolz.co — Made with 💖 in Spain
 </footer>
 
+<!-- ================= TOS MODAL ================= -->
+<dialog id="tosModal">
+  <div class="flex items-center justify-between px-5 py-3.5 border-b border-line2">
+    <h3 class="mono text-sm text-ink">terms_of_service.md</h3>
+    <button type="button" data-close-modal="tosModal" aria-label="Close" class="text-mute hover:text-green mono text-lg leading-none">×</button>
+  </div>
+  <div class="px-5 py-5 max-h-[65vh] overflow-y-auto text-sm text-mute leading-relaxed space-y-4">
+    <p><strong class="text-ink">1. Acceptance of terms.</strong> By using this website you agree to these Terms of Service. If you don't agree, please don't use the site.</p>
+    <p><strong class="text-ink">2. Content.</strong> All text, code samples, and design on this site belong to Alex Novák unless stated otherwise, and may not be reproduced commercially without written permission.</p>
+    <p><strong class="text-ink">3. Referral links.</strong> Some links in the Referrals section are affiliate links. I may earn a commission if you sign up through them, at no extra cost to you.</p>
+    <p><strong class="text-ink">4. No warranty.</strong> This site and its content are provided "as is" without warranties of any kind, including accuracy of project descriptions or third-party service details.</p>
+    <p><strong class="text-ink">5. Liability.</strong> Alex Novák is not liable for any damages arising from the use of this website or reliance on any information presented here.</p>
+    <p><strong class="text-ink">6. Changes.</strong> These terms may be updated at any time. Continued use of the site after changes means you accept the revised terms.</p>
+    <p><strong class="text-ink">7. Contact.</strong> Questions about these terms can be sent to hello@alex.dev.</p>
+  </div>
+</dialog>
+
+<!-- ================= PRIVACY MODAL ================= -->
+<dialog id="privacyModal">
+  <div class="flex items-center justify-between px-5 py-3.5 border-b border-line2">
+    <h3 class="mono text-sm text-ink">privacy_policy.md</h3>
+    <button type="button" data-close-modal="privacyModal" aria-label="Close" class="text-mute hover:text-green mono text-lg leading-none">×</button>
+  </div>
+  <div class="px-5 py-5 max-h-[65vh] overflow-y-auto text-sm text-mute leading-relaxed space-y-4">
+    <p><strong class="text-ink">1. Data collected.</strong> This site does not use tracking cookies or analytics by default. If a contact form is added later, it will only collect the information you submit.</p>
+    <p><strong class="text-ink">2. Email.</strong> If you email me directly, your address and message content are kept only as long as needed to respond and are never sold or shared.</p>
+    <p><strong class="text-ink">3. Third-party links.</strong> Referral and social links lead to third-party sites with their own privacy policies, which I don't control.</p>
+    <p><strong class="text-ink">4. Your rights.</strong> You can request deletion of any data you've sent me at any time by emailing hello@alex.dev.</p>
+    <p><strong class="text-ink">5. Changes.</strong> This policy may be updated occasionally; the latest version always applies.</p>
+  </div>
+</dialog>
+
+<!-- Toast -->
+<div id="toast" class="toast mono">Copied!</div>
+
 <script>
-  document.getElementById('year').textContent = new Date().getFullYear();
+  // ---- Modal handling (TOS / Privacy) ----
+  document.querySelectorAll('[data-open-modal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-open-modal');
+      const dialog = document.getElementById(id);
+      if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+    });
+  });
+  document.querySelectorAll('[data-close-modal]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-close-modal');
+      const dialog = document.getElementById(id);
+      if (dialog) dialog.close();
+    });
+  });
+  document.querySelectorAll('dialog').forEach(dialog => {
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                      e.clientY >= rect.top && e.clientY <= rect.bottom;
+      if (!inside) dialog.close();
+    });
+  });
 
-  const phrases = ["Building crypto bots.", "Automating everything.", "Scripting the future."];
-  const el = document.getElementById('typed');
-  let pi = 0, ci = 0, deleting = false;
-
-  function tick(){
-    const current = phrases[pi];
-    if(!deleting){
-      ci++;
-      el.textContent = current.slice(0, ci);
-      if(ci === current.length){
-        deleting = true;
-        setTimeout(tick, 1600);
-        return;
-      }
-    } else {
-      ci--;
-      el.textContent = current.slice(0, ci);
-      if(ci === 0){
-        deleting = false;
-        pi = (pi + 1) % phrases.length;
-      }
-    }
-    setTimeout(tick, deleting ? 35 : 65);
+  // ---- Copy-to-clipboard for referral codes ----
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
   }
-  tick();
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const targetId = btn.getAttribute('data-copy-target');
+      const codeEl = document.getElementById(targetId);
+      const text = codeEl ? codeEl.textContent.trim() : '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (err) {
+        // fallback for older browsers / non-secure contexts
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      showToast(`Copied "${text}" to clipboard!`);
+      setTimeout(() => { btn.textContent = original; }, 1600);
+    });
+  });
 </script>
+
 </body>
 </html>
